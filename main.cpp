@@ -6,12 +6,16 @@ using namespace std;
 
 enum eDirection { STOP = 0, LEFT = 1, UPLEFT = 2, DOWNLEFT = 3, RIGHT = 4, UPRIGHT = 5, DOWNRIGHT = 6};
 
+//---------------------------------
+//			Ball Class
+//---------------------------------
 class Ball {
 private: 
 	int x, y;
 	int originalX, originalY;
 	eDirection direction;
 public:
+	//contructor
 	Ball(int posX, int posY) {
 		originalX = posX;
 		originalY = posY;
@@ -20,32 +24,40 @@ public:
 		direction = STOP;
 	}
 
+	//Reset - resets ball to middle
 	void reset() {
 		x = originalX;
 		y = originalY;
-		direction = STOP;
+		direction = STOP; //not moving
 	}
 	
+	//Changes direction after hitting paddle/wall
 	void changeDirection(eDirection d) {
 		direction = d;
 	}
 
+	//picks random direction for ball
 	void randomDirection() {
 		direction = (eDirection)((rand() % 6) + 1);
 	}
 
+	//Gets X-coord
 	int getX() {
 		return x;
 	}
 
+	//Gets Y-coord
 	int getY() {
 		return y;
 	}
 
+	//Gets current direction
 	eDirection getDirection() {
 		return direction;
 	}
 
+	//telling the ball which way
+	//move for each direction
 	void Move() {
 		switch (direction) {
 		case STOP:
@@ -77,17 +89,22 @@ public:
 		}
 	}
 
+	//for testing, returns position of ball [x,y]
 	friend ostream &operator<<(ostream &o, Ball c) {
 		o << "Ball [" << c.x << "," << c.y << "][" << c.direction << "]";
 		return o;
 	}
 };
 
+//---------------------------------
+//		  Paddle Class
+//---------------------------------
 class Paddle {
 private:
 	int x, y;
 	int originalX, originalY;
 public:
+	//constructors
 	Paddle() {
 		x = y = 0;
 	}
@@ -99,33 +116,43 @@ public:
 		y = posY;
 	}
 
+	//Resets Paddle to middle of screen
 	void Reset() {
 		x = originalX;
 		y = originalY;
 	}
 
+	//Gets X-coord
 	int getX() {
 		return x;
 	}
 
+	//Gets Y-coord
 	int getY() {
 		return y;
 	}
 
+	//Moves paddle up screen
 	void moveUp() {
 		y--;
 	}
 
+	//Moves paddle down on the screen
 	void moveDown() {
 		y++;
 	}
 
+	//For testing. Outputs the current position [x,y]
+	//x shouldn't change
 	friend ostream &operator<<(ostream &o, Paddle c) {
 		o << "Paddle [" << c.x << "," << c.y << "]";
 		return o;
 	}
 };
 
+//---------------------------------
+//		  Game Manager
+//---------------------------------
 class GameManager {
 private:
 	int width, height;
@@ -136,25 +163,28 @@ private:
 	Paddle *player1;
 	Paddle *player2;
 public:
+	//contructor
 	GameManager(int w, int h) {
 		srand(time(NULL));
 		quit = false;
 		up1 = 'w';
 		down1 = 's';
-		up2 = 'i';
-		down2 = 'k';
+		up2 = 'o';	 //will figure out how to change to up arrow
+		down2 = 'l'; //will figure out how to change to down arrow
 		score1 = score2 = 0;
 		width = w;
 		height = h;
-		ball = new Ball(w / 2, h / 2);
-		player1 = new Paddle(1, h / 2 - 3);
-		player2 = new Paddle(w-2, h / 2 - 3);
+		ball = new Ball(w / 2, h / 2);			//middle of screen
+		player1 = new Paddle(1, h / 2 - 3);		//left side of screen
+		player2 = new Paddle(w-2, h / 2 - 3);	//right side of screen
 	}
 
+	//destructor
 	~GameManager() {
 		delete ball, player1, player2;
 	}
 
+	//increases score of player. resets ball/paddles
 	void scoreUp(Paddle *player) {
 		if (player == player1) 
 			score1++;
@@ -166,6 +196,7 @@ public:
 		player2->Reset();
 	}
 
+	//Draws everything
 	void Draw() {
 		system("cls");
 		for (int i = 0; i < width + 2; i++) {
@@ -221,7 +252,7 @@ public:
 		}
 		cout << "\n\n";
 
-		cout << "\t\t" << score1 << " <-- Score --> " << score2 << '\n';
+		cout << "\t\t\t\t" << score1 << " <-- Score --> " << score2 << '\n';
 	}
 
 	void Input() {
@@ -256,6 +287,7 @@ public:
 		}
 	}
 
+	//Interprets input from keyboards and moves ball and paddles
 	void Logic() {
 		int ballx = ball->getX();
 		int bally = ball->getY();
@@ -291,7 +323,11 @@ public:
 			scoreUp(player2);
 	}
 
+	//runs the program
 	void Run() {
+		cout << "\n\n\n\n\n\n";
+		cout << "\t\t\t\tTO QUIT PRESS 'q'";
+		Sleep(3000);
 		while (!quit) {
 			Draw();
 			Input();
@@ -300,10 +336,11 @@ public:
 	}
 };
 
+//---------------------------------
+//			  Main
+//---------------------------------
 int main() {
-	GameManager g(80, 20);
+	GameManager g(80, 24);
 	g.Run();
-
-	system("pause");
 	return 0;
 }
