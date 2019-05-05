@@ -2,7 +2,7 @@
 ## Intro
 This is a test of the viability of running a "game" with only C++, no GUI, and only 4 libraries (iostream, conio.h, windows.h, and time.h). Right now, I have copied over the program from a YouTube series (below) and will be trying to optimize it so that the screen doesn't update every single time an action occurs.
 
-###ONLY been tested on Windows. Compile using Virtual Studio with at least c++11 or higher
+### ONLY been tested on Windows. Compile using Virtual Studio with at least c++11 or higher
 
 ## Preliminary Findings
 This project was straight-forward and logically sound, however, the root of the problem was not in the code... It was in the premise. Updating the entire canvas everytime the ball moved created a glitchy effect making the game hard to play. Another shortfall of this program is that the inputs from the keyboard do not update if you hold down a key (basically input lag), which is annoying IMO.
